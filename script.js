@@ -43,6 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
     totalAmountDisplay.textContent = totalAmount.toFixed(2);
   }
 
+  //Function to Render Expenses
+  function renderExpenses() {
+    expenseList.innerHTML = "";
+    expenses.forEach((expense) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${expense.name} - $${expense.amount}
+      <button data-id='${expense.id}'>Delete</button>`;
+      expenseList.appendChild(li);
+      saveExpenses();
+    });
+  }
   // Store Expenses in Local Storage
   function saveExpenses() {
     localStorage.setItem("Expenses", JSON.stringify(expenses));
