@@ -6,5 +6,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const total = document.getElementById("total");
   const totalAmountDisplay = document.getElementById("total-amount");
 
-  let expenses = [];
+  let expenses = JSON.parse(localStorage.getItem("Expenses")) || [];
+  let totalAmount = calculateTotal();
+
+  // Add Event Listener to Form Submit
+  expenseForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // Preventing Default Behaviour of Form
+    const name = expenseNameInput.value.trim();
+    const amount = parseFloat(expenseAmountInput.value.trim());
+
+    if (name !== "" && !isNaN(amount) && amount > 0) {
+      const newExpense = {
+        id: Date.now(),
+        name,
+        amount,
+      };
+
+      expenses.push(newExpense);
+      saveExpenses();
+      renderExpenses();
+      updateTotal();
+      //Clear Input
+      expenseNameInput.value = "";
+      expenseAmountInput.value = "";
+    }
+  });
+
+  // Function to Calculate Total
+  function calculateTotal() {
+    return expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  }
+
+  // Function to Update Total
+  function updateTotal() {
+    totalAmount = calculateTotal();
+    totalAmountDisplay.textContent = totalAmount.toFixed(2);
+  }
+
+  // Store Expenses in Local Storage
+  function saveExpenses() {
+    localStorage.setItem("Expenses", JSON.stringify(expenses));
+  }
 });
