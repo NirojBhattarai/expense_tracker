@@ -6,7 +6,6 @@ const tranactionSchema = new Schema (
             type:Schema.Types.ObjectId,
             ref:"User"
         },
-
         category:{
             type:String,
             required:true
@@ -15,13 +14,16 @@ const tranactionSchema = new Schema (
             type:Number,
             required:true
         },
+        type:{
+            type:String,
+            requiured:true
+        },
         invoice:{
             type:String,
-            required:true
         }
     },{
         timestamps:true
     }
 );
 
-export const Transaction = mongoose.model("Transcation",tranactionSchema);
+export const Transaction = mongoose.model("Transaction",tranactionSchema);
