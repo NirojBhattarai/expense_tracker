@@ -8,7 +8,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // User validation
     if (
-        [email, username, password].some(
+        [username, email, password].some(
             (field) => field?.trim() === ""
         )
     ) {
@@ -43,7 +43,7 @@ const registerUser = asyncHandler(async (req, res) => {
             .json(new apiResponse(200, createdUser, "User Registered Successfully"))
     } catch (error) {
         console.log("User Creation Failed");
-        throw new apiError(400, "Something went wrong while registering user and images were deleted");
+        throw new apiError(500, "Internal Server Error");
     }
 });
 
