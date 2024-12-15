@@ -47,4 +47,44 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
-export { registerUser };
+const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    // Validate input fields
+    if ([email, password].some((field) => field?.trim() === "")) {
+        throw new apiError(400, "Email and Password are required");
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        throw new apiError(401, "Invalid email or password");
+    }
+
+    // Compare passwords
+    const isPasswordValid = await user.isPasswordCorrect(password);
+    if (!isPasswordValid) {
+        throw new apiError(401, "Invalid email or password");
+    }
+
+    // Generate tokens
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    // Update refresh token in the database
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    // Send response
+    const userData = await User.findById(user._id).select("-password -refreshToken");
+
+    return res
+        .status(200)
+        .json(new apiResponse(200, { user: userData, accessToken, refreshToken }, "Login Successful"));
+});
+
+export { 
+    registerUser,
+    loginUser
+ };
