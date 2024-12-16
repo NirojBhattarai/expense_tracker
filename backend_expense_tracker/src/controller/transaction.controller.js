@@ -4,6 +4,8 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+const _id = process.env.USER_ID;
+
 const createTransaction = asyncHandler(async (req, res) => {
   const { category, amount, type, invoice } = req.body;
   
@@ -24,7 +26,7 @@ const createTransaction = asyncHandler(async (req, res) => {
 
   try {
     const transaction = await Transaction.create({
-      userId: "675ee8b8eefd45e72660c0d4",
+      userId:_id,
       category,
       type,
       amount,
