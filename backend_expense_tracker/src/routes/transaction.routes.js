@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createTransaction,
+  deleteTransaction,
   readTransaction,
   updateTransaction,
 } from "../controller/transaction.controller.js";
@@ -28,5 +29,6 @@ router.route("/update/:transactionId").put(
   ]),
   updateTransaction
 );
+router.route("/delete/:transactionId").delete(deleteTransaction);
 
 export default router;

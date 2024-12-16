@@ -143,11 +143,31 @@ const updateTransaction = asyncHandler(async (req, res) => {
   }
 });
 
+// Delete Transaction Function
+const deleteTransaction = asyncHandler(async (req, res) => {
+  const { transactionId } = req.params;  
 
+  try {
+    const transaction = await Transaction.findById(transactionId);
+
+    if (!transaction) {
+      throw new apiError(404, "Transaction not found");
+    }
+
+    // Delete the transaction
+    await transaction.deleteOne();
+
+    return res.status(200).json(new apiResponse(200, "Transaction Deleted Successfully"));
+  } catch (error) {
+    console.log("Transaction Deletion Failed", error);
+    throw new apiError(500, "Internal Server Error");
+  }
+});
 
 
 export {
   createTransaction,
   readTransaction,
-  updateTransaction
+  updateTransaction,
+  deleteTransaction
 }
