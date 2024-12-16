@@ -8,6 +8,7 @@ import {deleteFromCloudinary} from "../utils/cloudinary.js";
 
 const _id = process.env.USER_ID;
 
+//Create Transaction Function
 const createTransaction = asyncHandler(async (req, res) => {
   const { category, amount, type} = req.body;
   
@@ -61,5 +62,29 @@ const createTransaction = asyncHandler(async (req, res) => {
     throw new apiError(500, "Internal Server Error");
   }
 });
+
+// Read Transactions Function
+const readTransaction = asyncHandler(async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ userId:_id })
+      .sort({ createdAt: -1 }) 
+      .populate("userId", "name email") 
+      .lean(); 
+
+    if (!transactions || transactions.length === 0) {
+      throw new apiError(404, "No transactions found");
+    }
+
+    return res.status(200).json(
+      new apiResponse(200, "Transactions retrieved successfully", transactions)
+    );
+  } catch (error) {
+    console.log("Error Retrieving Transactions", error);
+    throw new apiError(500, "Internal Server Error");
+  }
+});
+
+export { readTransaction };
+
 
 export {createTransaction}
