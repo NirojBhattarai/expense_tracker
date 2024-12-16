@@ -4,11 +4,12 @@ const categoriesSchema = new Schema(
     {
         name:{
             type:String,
-            required:true
+            required:true,
         },
         type:{
             type:String,
-            required: true
+            required: true,
+            enum: ["Income", "Expense"]
         }
     }
 );

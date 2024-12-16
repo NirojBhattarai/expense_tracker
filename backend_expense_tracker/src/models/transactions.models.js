@@ -16,7 +16,7 @@ const tranactionSchema = new Schema (
         },
         type:{
             type:String,
-            requiured:true
+            required:true,
         },
         invoice:{
             type:String,
