@@ -72,7 +72,7 @@ const readTransaction = asyncHandler(async (req, res) => {
       .lean(); 
 
     if (!transactions || transactions.length === 0) {
-      return res.send(404, "No transaction Found");
+      return res.status(404).send("No transaction Found");
     }
 
     return res.status(200).json(
@@ -80,7 +80,7 @@ const readTransaction = asyncHandler(async (req, res) => {
     );
   } catch (error) {
     console.log("Error Retrieving Transactions", error);
-    res.send(500, "Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
 });
 
