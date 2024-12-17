@@ -6,10 +6,12 @@ import {
   updateTransaction,
 } from "../controller/transaction.controller.js";
 import { upload } from "../middlewares/multer.middlewares.js";
+import { authenticateUser } from "../middlewares/authenticateuser.middlewares.js";
 
 const router = Router();
 
 router.route("/create").post(
+  authenticateUser, 
   upload.fields([
     {
       name: "invoice",
@@ -19,8 +21,12 @@ router.route("/create").post(
   createTransaction
 );
 
-router.route("/view").post(readTransaction);
+
+router.route("/view").post(authenticateUser, readTransaction);
+
+
 router.route("/update/:transactionId").put(
+  authenticateUser, 
   upload.fields([
     {
       name: "invoice",
@@ -29,6 +35,9 @@ router.route("/update/:transactionId").put(
   ]),
   updateTransaction
 );
-router.route("/delete/:transactionId").delete(deleteTransaction);
+
+router
+  .route("/delete/:transactionId")
+  .delete(authenticateUser, deleteTransaction);
 
 export default router;
