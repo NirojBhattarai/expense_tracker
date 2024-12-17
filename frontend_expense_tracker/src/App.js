@@ -9,7 +9,6 @@ import PrivateRoute from "./Router/PrivateRoute.js";
 function App() {
   return (
     <AuthProvider>
-      
       <div>
         {" "}
         <Routes>

@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     const renewToken = async () => {
         try {
             const refreshToken = localStorage.getItem('refreshToken');
-            const response = await axios.post('/api/', { token: refreshToken });
+            const response = await axios.post('http:localhost/api/v1/users/token', { token: refreshToken });
             localStorage.setItem('accessToken', response.data.accessToken);
             return response.data.accessToken;
         } catch (error) {
