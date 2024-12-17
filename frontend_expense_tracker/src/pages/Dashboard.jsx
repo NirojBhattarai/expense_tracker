@@ -238,7 +238,7 @@ const Dashboard = () => {
                 onClick={
                   selectedTransaction ? updateTransaction : createTransaction
                 }
-                className="bg-blue-500 text-white p-2 rounded"
+                className="bg-blue-500 text-white px-4 py-1 rounded"
               >
                 {selectedTransaction ? "Update" : "Add"}
               </button>
@@ -281,6 +281,14 @@ const Dashboard = () => {
                       >
                         Delete
                       </button>
+                      {transaction.invoice && (
+                        <button
+                          onClick={() => openInvoiceModal(transaction.invoice)}
+                          className="bg-green-500 text-white p-2 rounded"
+                        >
+                          View Invoice
+                        </button>
+                      )}
                     </div>
                   </li>
                 ))}
@@ -366,33 +374,35 @@ const Dashboard = () => {
       {/* Edit Transaction Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xl">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-0">
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-500 text-xl"
+              className="absolute top-2 right-2 text-gray-500 text-2xl"
             >
               &times;
             </button>
-            <h2 className="text-2xl font-bold mb-4">Edit Transaction</h2>
-            <div className="flex flex-col md:flex-row gap-4">
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+              Edit Transaction
+            </h2>
+            <div className="flex flex-col gap-4">
               <input
                 type="text"
                 placeholder="Category"
-                className="border p-2 rounded"
+                className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
               />
               <input
                 type="number"
                 placeholder="Amount"
-                className="border p-2 rounded"
+                className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={form.amount}
                 onChange={(e) =>
                   setForm({ ...form, amount: parseFloat(e.target.value) })
                 }
               />
               <select
-                className="border p-2 rounded"
+                className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
               >
@@ -403,11 +413,11 @@ const Dashboard = () => {
               <input
                 type="file"
                 onChange={(e) => setInvoice(e.target.files[0])}
-                className="border p-2 rounded"
+                className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
                 onClick={updateTransaction}
-                className="bg-blue-500 text-white p-2 rounded"
+                className="bg-blue-600 text-white p-3 rounded-md mt-4 hover:bg-blue-700 transition duration-200"
               >
                 Update
               </button>

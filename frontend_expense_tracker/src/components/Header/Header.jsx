@@ -2,7 +2,7 @@ import React from "react";
 
 function Header() {
   return (
-    <header className="bg-zinc-600 shadow-lg py-4">
+    <header className="bg-cyan-950 shadow-lg py-4">
       <div className="container mx-auto flex justify-between items-center px-4">
         <div className="text-white text-2xl font-bold">
           <span className="bg-clip-text text-transparent bg-white">
