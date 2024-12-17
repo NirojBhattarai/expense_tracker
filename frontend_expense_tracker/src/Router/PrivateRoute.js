@@ -1,25 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
-    // const { isAuthenticated, renewToken } = useContext(AuthContext);
-    // const [isTokenValid, setIsTokenValid] = useState(isAuthenticated);
+    const { isAuthenticated } = useContext(AuthContext);
 
-    // useEffect(() => {
-    //     const checkToken = async () => {
-    //         if (!isAuthenticated) {
-    //             const newToken = await renewToken();
-    //             setIsTokenValid(!!newToken);
-    //         }
-    //     };
-    //     checkToken();
-    // }, [isAuthenticated, renewToken]);
-
-    if(false)return (
-        children
-    );
-    else return <Navigate to={"/login"}/>
+    // Check if user is authenticated
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;
