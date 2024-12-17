@@ -9,7 +9,7 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/v1/users/logout");
+      await axios.post("https://expense-tracker-qyva.onrender.com/api/v1/users/logout");
 
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");

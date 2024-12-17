@@ -39,7 +39,7 @@ const Dashboard = () => {
   const fetchTransactions = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/transaction/view"
+        "https://expense-tracker-qyva.onrender.com/api/v1/transaction/view"
       );
       const fetchedTransactions = response.data.data || [];
       setTransactions(fetchedTransactions);
@@ -69,7 +69,7 @@ const Dashboard = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/v1/transaction/create",
+        "https://expense-tracker-qyva.onrender.com/api/v1/transaction/create",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -95,7 +95,7 @@ const Dashboard = () => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/v1/transaction/update/${selectedTransaction._id}`,
+        `https://expense-tracker-qyva.onrender.com/api/v1/transaction/update/${selectedTransaction._id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -113,7 +113,7 @@ const Dashboard = () => {
   const deleteTransaction = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/v1/transaction/delete/${id}`
+        `https://expense-tracker-qyva.onrender.com/api/v1/transaction/delete/${id}`
       );
       fetchTransactions();
     } catch (error) {

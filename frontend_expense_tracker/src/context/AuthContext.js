@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
                 throw new Error('No refresh token available');
             }
 
-            const response = await axios.post('http://localhost:5000/api/v1/users/token', { token: refreshToken });
+            const response = await axios.post('https://expense-tracker-qyva.onrender.com/api/v1/users/token', { token: refreshToken });
 
             // Store the new access token in localStorage
             localStorage.setItem('accessToken', response.data.accessToken);
