@@ -9,17 +9,17 @@ import PrivateRoute from "./Router/PrivateRoute.js";
 function App() {
   return (
     <AuthProvider>
-      {" "}
+      
       <div>
         {" "}
         <Routes>
           {" "}
           <Route path="/login" element={<Login />} />{" "}
           <Route path="/register" element={<Register />} />{" "}
-          <PrivateRoute path="/*" element={<Layout />} />{" "}
+          <Route path="/*" element={<PrivateRoute><Layout /></PrivateRoute>}/>
         </Routes>{" "}
-      </div>{" "}
-    </AuthProvider>
+      </div>
+     </AuthProvider>
   );
 }
 export default App;
