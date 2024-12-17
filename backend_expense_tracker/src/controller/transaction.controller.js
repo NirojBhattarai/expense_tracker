@@ -8,7 +8,7 @@ import {deleteFromCloudinary} from "../utils/cloudinary.js";
 
 //Create Transaction Function
 const createTransaction = asyncHandler(async (req, res) => {
-  const { category, amount, type} = req.body;
+  const { category, amount, type, userId} = req.body;
   
   //Validate required Fields
   if (!amount || !category || !type) {
@@ -37,7 +37,7 @@ const createTransaction = asyncHandler(async (req, res) => {
 
   try {
     const transaction = await Transaction.create({
-      userId:req.user._id,
+      userId:userId,
       category,
       type,
       amount,
@@ -63,8 +63,10 @@ const createTransaction = asyncHandler(async (req, res) => {
 
 // Read Transactions Function
 const readTransaction = asyncHandler(async (req, res) => {
+  const _id = req.params.id;
+
   try {
-    const transactions = await Transaction.find({ userId:req.user._id })
+    const transactions = await Transaction.find({ userId:_id })
       .sort({ createdAt: -1 }) 
       .populate("userId", "name email") 
       .lean(); 
@@ -78,7 +80,7 @@ const readTransaction = asyncHandler(async (req, res) => {
     );
   } catch (error) {
     console.log("Error Retrieving Transactions", error);
-    throw new apiError(500, "Internal Server Error");
+    res.send(500, "Internal Server Error");
   }
 });
 
@@ -143,7 +145,7 @@ const updateTransaction = asyncHandler(async (req, res) => {
 
 // Delete Transaction Function
 const deleteTransaction = asyncHandler(async (req, res) => {
-  const { transactionId } = req.params;  
+  const { transactionId, _id } = req.params;  
 
   try {
     const transaction = await Transaction.findById(transactionId);
