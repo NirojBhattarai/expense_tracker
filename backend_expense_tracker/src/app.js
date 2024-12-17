@@ -11,6 +11,7 @@ const corsOptions = {
       const allowedOrigins = [
         "http://localhost:3000",
         "http://localhost:3001",
+        "https://vedaexpensetracker.netlify.app",
         "*",
       ];
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
