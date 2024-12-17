@@ -72,7 +72,7 @@ const readTransaction = asyncHandler(async (req, res) => {
       .lean(); 
 
     if (!transactions || transactions.length === 0) {
-      throw new apiError(404, "No transactions found");
+      return res.send(404, "No transaction Found");
     }
 
     return res.status(200).json(
