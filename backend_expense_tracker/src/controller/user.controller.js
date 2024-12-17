@@ -65,15 +65,15 @@ const loginUser = asyncHandler(async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "strict",
+        secure:  process.env.NODE_ENV === 'production',
+        sameSite: "None",
         maxAge: 15 * 60 * 1000
     });
 
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "strict",
+        secure:  process.env.NODE_ENV === 'production',
+        sameSite: "None",
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -105,15 +105,15 @@ const refreshToken = asyncHandler(async (req, res) => {
 
     res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "strict",
+        secure:  process.env.NODE_ENV === 'production',
+        sameSite: "None",
         maxAge: 15 * 60 * 1000
     });
 
     res.cookie("refreshToken", newRefreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
+        httpOnly:  process.env.NODE_ENV === 'production',
+        secure: false,
+        sameSite: "None",
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
 

@@ -76,7 +76,7 @@ const readTransaction = asyncHandler(async (req, res) => {
     }
 
     return res.status(200).json(
-      new apiResponse(200, "Transactions retrieved successfully", transactions)
+      new apiResponse(200, transactions, "Transaction retrieved Successfully")
     );
   } catch (error) {
     console.log("Error Retrieving Transactions", error);
