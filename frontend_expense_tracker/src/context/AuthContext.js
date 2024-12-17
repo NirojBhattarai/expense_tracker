@@ -5,26 +5,32 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userId, setUserId] = useState("");
 
     // Check if the accessToken exists in localStorage when the component mounts
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
-        if (accessToken) {
+        const userId = localStorage.getItem('userId');
+        if (accessToken && userId) {
+            setUserId(userId);
             setIsAuthenticated(true);
         }
     }, []);
 
     // Store tokens in localStorage
-    const login = (accessToken, refreshToken) => {
+    const login = (accessToken, refreshToken, userId) => {
         localStorage.setItem('accessToken', accessToken); // Store access token
-        localStorage.setItem('refreshToken', refreshToken); // Store refresh token
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('userId', userId); // Store refresh token
         setIsAuthenticated(true);
+        setUserId(userId)
     };
 
     // Remove tokens from localStorage and set isAuthenticated to false
     const logout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userId');
         setIsAuthenticated(false);
     };
 
@@ -36,7 +42,7 @@ export const AuthProvider = ({ children }) => {
                 throw new Error('No refresh token available');
             }
 
-            const response = await axios.post('https://expense-tracker-qyva.onrender.com/api/v1/users/token', { token: refreshToken });
+            const response = await axios.post('http://localhost:5000/api/v1/users/token', { token: refreshToken });
 
             // Store the new access token in localStorage
             localStorage.setItem('accessToken', response.data.accessToken);
@@ -47,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, renewToken }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, renewToken, userId }}>
             {children}
         </AuthContext.Provider>
     );

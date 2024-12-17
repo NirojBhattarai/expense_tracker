@@ -19,7 +19,10 @@ router.route("/create").post(
   createTransaction
 );
 
-router.route("/view").post(readTransaction);
+
+router.route("/view/:id").post (readTransaction);
+
+
 router.route("/update/:transactionId").put(
   upload.fields([
     {
@@ -29,6 +32,9 @@ router.route("/update/:transactionId").put(
   ]),
   updateTransaction
 );
-router.route("/delete/:transactionId").delete(deleteTransaction);
+
+router
+  .route("/delete/:transactionId/:id")
+  .delete(deleteTransaction);
 
 export default router;

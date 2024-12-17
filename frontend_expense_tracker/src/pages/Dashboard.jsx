@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
 import {
@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { AuthContext } from "../context/AuthContext";
 
 ChartJS.register(
   CategoryScale,
@@ -20,7 +21,12 @@ ChartJS.register(
   Legend
 );
 
+
+
 const Dashboard = () => {
+  const user = useContext(AuthContext);
+  console.log(user);
+
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [transactions, setTransactions] = useState([]);
@@ -30,16 +36,17 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
-
+  const _id=user?.userId;
+  
   // Fetch Transactions
   useEffect(() => {
     fetchTransactions();
-  }, []);
+  },[]);
 
   const fetchTransactions = async () => {
     try {
       const response = await axios.post(
-        "https://expense-tracker-qyva.onrender.com/api/v1/transaction/view"
+       `http://localhost:5000/api/v1/transaction/view/${_id}`,
       );
       const fetchedTransactions = response.data.data || [];
       setTransactions(fetchedTransactions);
@@ -65,11 +72,12 @@ const Dashboard = () => {
     formData.append("category", form.category);
     formData.append("amount", form.amount);
     formData.append("type", form.type);
+    formData.append("userId", _id);
     if (invoice) formData.append("invoice", invoice);
 
     try {
       await axios.post(
-        "https://expense-tracker-qyva.onrender.com/api/v1/transaction/create",
+        "http://localhost:5000/api/v1/transaction/create",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -91,11 +99,12 @@ const Dashboard = () => {
     formData.append("category", form.category);
     formData.append("amount", form.amount);
     formData.append("type", form.type);
+    formData.append("userId", _id);
     if (invoice) formData.append("invoice", invoice);
 
     try {
       await axios.put(
-        `https://expense-tracker-qyva.onrender.com/api/v1/transaction/update/${selectedTransaction._id}`,
+        `http://localhost:5000/api/v1/transaction/update/${selectedTransaction._id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -110,10 +119,10 @@ const Dashboard = () => {
   };
 
   // Delete Transaction
-  const deleteTransaction = async (id) => {
+  const deleteTransaction = async (transid) => {
     try {
       await axios.delete(
-        `https://expense-tracker-qyva.onrender.com/api/v1/transaction/delete/${id}`
+        `http://localhost:5000/api/v1/transaction/delete/${transid}/${_id}`
       );
       fetchTransactions();
     } catch (error) {
