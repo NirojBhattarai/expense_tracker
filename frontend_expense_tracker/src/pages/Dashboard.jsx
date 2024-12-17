@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext, useCallback} from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
 import {
@@ -38,15 +38,12 @@ const Dashboard = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const _id=user?.userId;
   
-  // Fetch Transactions
-  useEffect(() => {
-    fetchTransactions();
-  },[]);
+  
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     try {
       const response = await axios.post(
-       `https://expense-tracker-qyva.onrender.com/api/v1/transaction/view/${_id}`,
+        `https://expense-tracker-qyva.onrender.com/api/v1/transaction/view/${_id}`
       );
       const fetchedTransactions = response.data.data || [];
       setTransactions(fetchedTransactions);
@@ -59,12 +56,17 @@ const Dashboard = () => {
         .filter((t) => t.type === "expense")
         .reduce((sum, t) => sum + parseFloat(t.amount), 0);
 
-      setTotalIncome(income); // Set the total income
-      setTotalExpenses(expenses); // Set the total expenses
+      setTotalIncome(income);
+      setTotalExpenses(expenses);
     } catch (error) {
       console.error("Error fetching transactions:", error);
     }
-  };
+  }, [_id]); 
+
+  
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   // Create Transaction
   const createTransaction = async () => {
