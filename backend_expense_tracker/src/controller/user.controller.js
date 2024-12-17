@@ -97,10 +97,6 @@ const refreshToken = asyncHandler(async (req, res) => {
         throw new apiError(403, "Invalid refresh token");
     }
 
-    // if (!isValid) {
-    //     throw new apiError(403, "Invalid refresh token");
-    // }
-
     const newAccessToken = user.generateAccessToken();
     const newRefreshToken = user.generateRefreshToken();
 
