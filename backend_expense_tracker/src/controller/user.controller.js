@@ -3,6 +3,7 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { User } from "../models/users.models.js";
 
+// Register User
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -39,6 +40,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
+// Login User
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
@@ -63,29 +65,33 @@ const loginUser = asyncHandler(async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure:  process.env.NODE_ENV === 'production',
-        sameSite: "None",
-        maxAge: 15 * 60 * 1000
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure:  process.env.NODE_ENV === 'production',
-        sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-
     const userData = await User.findById(user._id).select("-password -refreshToken");
 
-    return res
-        .status(200)
-        .json(new apiResponse(200, userData, "Login Successful"));
+    return res.status(200).json(
+        new apiResponse(200, {
+            user: userData,
+            accessToken,
+            refreshToken
+        }, "Login Successful")
+    );
 });
 
+// Logout User
+
+const logoutUser = asyncHandler(async (req, res) => {
+    try {
+        return res.status(200).json({
+            message: "Logout successful",
+        });
+    } catch (error) {
+        throw new apiError(500, "Logout failed");
+    }
+});
+
+
+// Refresh Token
 const refreshToken = asyncHandler(async (req, res) => {
-    const { refreshToken } = req.cookies;
+    const { refreshToken } = req.body;
 
     if (!refreshToken) {
         throw new apiError(403, "Refresh token is missing");
@@ -103,27 +109,17 @@ const refreshToken = asyncHandler(async (req, res) => {
     user.refreshToken = newRefreshToken;
     await user.save();
 
-    res.cookie("accessToken", newAccessToken, {
-        httpOnly: true,
-        secure:  process.env.NODE_ENV === 'production',
-        sameSite: "None",
-        maxAge: 15 * 60 * 1000
-    });
-
-    res.cookie("refreshToken", newRefreshToken, {
-        httpOnly:  process.env.NODE_ENV === 'production',
-        secure: false,
-        sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-
-    return res
-        .status(200)
-        .json(new apiResponse(200, null, "Token refreshed successfully"));
+    return res.status(200).json(
+        new apiResponse(200, {
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken
+        }, "Token refreshed successfully")
+    );
 });
 
 export {
     registerUser,
     loginUser,
+    logoutUser,
     refreshToken
 };

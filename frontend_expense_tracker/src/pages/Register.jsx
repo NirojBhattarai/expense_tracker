@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext.js";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +9,13 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
+
+     useEffect(() => {
+            const accessToken = localStorage.getItem("accessToken");
+            if (accessToken) {
+                navigate("/"); 
+            }
+        }, [navigate]);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -31,7 +38,6 @@ const Register = () => {
                     Create an Account
                 </h2>
                 <form onSubmit={handleRegister} className="space-y-4">
-                    {/* Username Input */}
                     <div>
                         <label
                             htmlFor="username"

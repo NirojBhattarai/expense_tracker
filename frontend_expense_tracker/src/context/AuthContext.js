@@ -1,40 +1,48 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+    // Check if the accessToken exists in localStorage when the component mounts
     useEffect(() => {
-        const accessToken = Cookies.get('accessToken');
+        const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
             setIsAuthenticated(true);
         }
     }, []);
 
+    // Store tokens in localStorage
     const login = (accessToken, refreshToken) => {
-        // Save the tokens in cookies
-        Cookies.set('accessToken', accessToken, { expires: 15 / 1440 }); // 15 mins
-        Cookies.set('refreshToken', refreshToken, { expires: 7 }); // 7 days
+        localStorage.setItem('accessToken', accessToken); // Store access token
+        localStorage.setItem('refreshToken', refreshToken); // Store refresh token
         setIsAuthenticated(true);
     };
 
+    // Remove tokens from localStorage and set isAuthenticated to false
     const logout = () => {
-        // Remove the tokens from cookies
-        Cookies.remove('accessToken');
-        Cookies.remove('refreshToken');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         setIsAuthenticated(false);
     };
 
+    // Renew the access token using the refresh token stored in localStorage
     const renewToken = async () => {
         try {
-            const refreshToken = Cookies.get('refreshToken');
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken) {
+                throw new Error('No refresh token available');
+            }
+
             const response = await axios.post('http://localhost:5000/api/v1/users/token', { token: refreshToken });
-            Cookies.set('accessToken', response.data.accessToken, { expires: 15 / 1440 });
+
+            // Store the new access token in localStorage
+            localStorage.setItem('accessToken', response.data.accessToken);
             return response.data.accessToken;
         } catch (error) {
-            logout();
+            logout(); // If the refresh token is invalid, logout the user
         }
     };
 

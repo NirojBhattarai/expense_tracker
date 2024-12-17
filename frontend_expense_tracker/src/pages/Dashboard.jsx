@@ -158,7 +158,7 @@ const Dashboard = () => {
       {
         label: "Amount ($)",
         data: [totalIncome, totalExpenses],
-        backgroundColor: ["#34D399", "#F87171"], // Tailwind colors for green (income) and red (expenses)
+        backgroundColor: ["#34D399", "#F87171"],
         borderColor: ["#16A34A", "#DC2626"],
         borderWidth: 1,
       },
@@ -299,6 +299,7 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Graph Display */}
         <div className="bg-white p-6 rounded-lg shadow-md w-full mx-auto mt-10">
           <Bar
             data={chartData}
@@ -347,7 +348,7 @@ const Dashboard = () => {
                 },
               },
             }}
-            height={200} // Adjusting chart height
+            height={200} 
           />
         </div>
       </div>
