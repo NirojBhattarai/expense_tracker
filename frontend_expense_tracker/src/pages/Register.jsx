@@ -21,7 +21,7 @@ const Register = () => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/v1/users/register",
+                "https://expense-tracker-qyva.onrender.com/api/v1/users/register",
                 { username, email, password }
             );
       login(response.data.data.accessToken, response.data.data.refreshToken, response.data.data.user._id);

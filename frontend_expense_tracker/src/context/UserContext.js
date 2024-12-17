@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/users/view');
+        const response = await axios.get('https://expense-tracker-qyva.onrender.com/api/v1/users/view');
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
