@@ -6,8 +6,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import {deleteFromCloudinary} from "../utils/cloudinary.js";
 
-const _id = process.env.USER_ID;
-
 //Create Transaction Function
 const createTransaction = asyncHandler(async (req, res) => {
   const { category, amount, type} = req.body;
@@ -39,7 +37,7 @@ const createTransaction = asyncHandler(async (req, res) => {
 
   try {
     const transaction = await Transaction.create({
-      userId:_id,
+      userId:req.user._id,
       category,
       type,
       amount,
@@ -66,7 +64,7 @@ const createTransaction = asyncHandler(async (req, res) => {
 // Read Transactions Function
 const readTransaction = asyncHandler(async (req, res) => {
   try {
-    const transactions = await Transaction.find({ userId:_id })
+    const transactions = await Transaction.find({ userId:req.user._id })
       .sort({ createdAt: -1 }) 
       .populate("userId", "name email") 
       .lean(); 
