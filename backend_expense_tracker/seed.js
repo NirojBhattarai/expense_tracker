@@ -12,9 +12,16 @@ const seedCategories = async () => {
     });
 
     const categories = [
-      { name: "Food", type: "Expense" },
-      { name: "Grocery", type: "Expense" },
-      { name: "Salary", type: "Income" },
+      { name: "Rent", type: "Expense" },
+      { name: "Utilities", type: "Expense" },
+      { name: "Transportation", type: "Expense" },
+      { name: "Entertainment", type: "Expense" },
+      { name: "Healthcare", type: "Expense" },
+      { name: "Education", type: "Expense" },
+      { name: "Investments", type: "Income" },
+      { name: "Freelance", type: "Income" },
+      { name: "Business", type: "Income" },
+      { name: "Bonuses", type: "Income" }
     ];
 
     await Category.insertMany(categories);
