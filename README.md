@@ -51,9 +51,9 @@ To explore the app, use the default admin credentials:
 
 ## 📂 Tech Stack
 
-- **Frontend**: React.js  
+- **Frontend**: React.js, Tailwind CSS
 - **Backend**: Node.js, Express.js  
-- **Database**: MongoDB (Atlas)  
+- **Database**: MongoDB (Atlas) 
 - **Cloud Storage**: Cloudinary
 - **Version Control System**: Git
 - **Code Base**: GitHub 
