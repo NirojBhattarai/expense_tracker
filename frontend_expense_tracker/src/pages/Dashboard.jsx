@@ -25,8 +25,6 @@ ChartJS.register(
 
 const Dashboard = () => {
   const user = useContext(AuthContext);
-  console.log(user);
-
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [transactions, setTransactions] = useState([]);
@@ -215,13 +213,24 @@ const Dashboard = () => {
           </h2>
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex flex-col md:flex-row gap-4">
-              <input
-                type="text"
-                placeholder="Category"
+              <select
                 className="border p-2 rounded"
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-              />
+              >
+                <option value="">Category</option>
+                <option value="Food">Food</option>
+                <option value="Salary">Salary</option>
+                <option value="Grocery">Grocery</option>
+                <option value="Rent">Rent</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Business">Business</option>
+                <option value="Investments">Investments</option>
+                <option value="Bonuses">Bonuses</option>
+              </select>
               <input
                 type="number"
                 placeholder="Amount"
@@ -397,13 +406,24 @@ const Dashboard = () => {
               Edit Transaction
             </h2>
             <div className="flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="Category"
+              <select
                 className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-              />
+              >
+                 <option value="">Category</option>
+                <option value="Food">Food</option>
+                <option value="Salary">Salary</option>
+                <option value="Grocery">Grocery</option>
+                <option value="Rent">Rent</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Business">Business</option>
+                <option value="Investments">Investments</option>
+                <option value="Bonuses">Bonuses</option>
+              </select>
               <input
                 type="number"
                 placeholder="Amount"
