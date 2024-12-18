@@ -1,18 +1,17 @@
-import {Transaction} from "../models/transactions.models.js";
-import {Category} from "../models/categories.models.js";
-import { apiError } from "../utils/apiError.js";
+import { Transaction } from "../models/transactions.models.js";
+import { Category } from "../models/categories.models.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {uploadOnCloudinary} from "../utils/cloudinary.js";
-import {deleteFromCloudinary} from "../utils/cloudinary.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary } from "../utils/cloudinary.js";
 
 //Create Transaction Function
 const createTransaction = asyncHandler(async (req, res) => {
-  const { category, amount, type, userId} = req.body;
-  
+  const { category, amount, type, userId } = req.body;
+
   //Validate required Fields
   if (!amount || !category || !type) {
-    throw new apiError(400, "All Fields are Required");
+    return res.status(400).send("All fields are required");
   }
 
   //Validate Category
@@ -22,22 +21,22 @@ const createTransaction = asyncHandler(async (req, res) => {
   });
 
   if (!categoryExists) {
-    throw new apiError(400, "Invalid categroy or type");
+    return res.status(400).send("Invalid category or type");
   }
 
   const invoiceLocalPath = req.files?.invoice?.[0]?.path;
 
   let invoice;
-   try {
-     invoice = await uploadOnCloudinary(invoiceLocalPath);
-     console.log("Invoice uploaded successfully",invoice);
-   } catch (error) {
-    console.log("Error Uploading Invoice",error)
-   }
+  try {
+    invoice = await uploadOnCloudinary(invoiceLocalPath);
+    console.log("Invoice uploaded successfully", invoice);
+  } catch (error) {
+    console.log("Error Uploading Invoice", error);
+  }
 
   try {
     const transaction = await Transaction.create({
-      userId:userId,
+      userId: userId,
       category,
       type,
       amount,
@@ -45,7 +44,7 @@ const createTransaction = asyncHandler(async (req, res) => {
     });
 
     if (!transaction) {
-      throw new apiError(500, "Error while performing transaction");
+      return res.status(500).send("Error while performing transaction");
     }
 
     return res
@@ -54,10 +53,10 @@ const createTransaction = asyncHandler(async (req, res) => {
   } catch (error) {
     console.log("Transaction Creation Failed");
 
-    if(invoice){
+    if (invoice) {
       await deleteFromCloudinary(invoice.public_id);
-  }
-    throw new apiError(500, "Internal Server Error");
+    }
+    return res.status(500).send("Internal Server Error");
   }
 });
 
@@ -66,32 +65,34 @@ const readTransaction = asyncHandler(async (req, res) => {
   const _id = req.params.id;
 
   try {
-    const transactions = await Transaction.find({ userId:_id })
-      .sort({ createdAt: -1 }) 
-      .populate("userId", "name email") 
-      .lean(); 
+    const transactions = await Transaction.find({ userId: _id })
+      .sort({ createdAt: -1 })
+      .populate("userId", "name email")
+      .lean();
 
     if (!transactions || transactions.length === 0) {
       return res.status(404).send("No transaction Found");
     }
 
-    return res.status(200).json(
-      new apiResponse(200, transactions, "Transaction retrieved Successfully")
-    );
+    return res
+      .status(200)
+      .json(
+        new apiResponse(200, transactions, "Transaction retrieved Successfully")
+      );
   } catch (error) {
     console.log("Error Retrieving Transactions", error);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 });
 
 // Update Transaction Function
 const updateTransaction = asyncHandler(async (req, res) => {
-  const { transactionId } = req.params;  
-  const { category, amount, type} = req.body;
+  const { transactionId } = req.params;
+  const { category, amount, type } = req.body;
 
   // Validate required Fields
   if (!amount || !category || !type) {
-    throw new apiError(400, "All Fields are Required");
+    return res.status(400).send("All Fields are Required");
   }
 
   // Validate Category
@@ -101,7 +102,7 @@ const updateTransaction = asyncHandler(async (req, res) => {
   });
 
   if (!categoryExists) {
-    throw new apiError(400, "Invalid category or type");
+    return res.status(400).send("Invalid category or type");
   }
 
   const invoiceLocalPath = req.files?.invoice?.[0]?.path;
@@ -121,7 +122,7 @@ const updateTransaction = asyncHandler(async (req, res) => {
     const transaction = await Transaction.findById(transactionId);
 
     if (!transaction) {
-      throw new apiError(404, "Transaction not found");
+      return res.status(404).send("Transaction not found");
     }
 
     // Update the transaction details
@@ -132,42 +133,45 @@ const updateTransaction = asyncHandler(async (req, res) => {
 
     await transaction.save();
 
-    return res.status(200).json(new apiResponse(200, "Transaction Updated Successfully"));
+    return res
+      .status(200)
+      .json(new apiResponse(200, "Transaction Updated Successfully"));
   } catch (error) {
     console.log("Transaction Update Failed", error);
-    
-    if(invoice){
+
+    if (invoice) {
       await deleteFromCloudinary(invoice.public_id);
-  }
-    throw new apiError(500, "Internal Server Error");
+    }
+    return res.status(500).send("Internal Server Error");
   }
 });
 
 // Delete Transaction Function
 const deleteTransaction = asyncHandler(async (req, res) => {
-  const { transactionId, _id } = req.params;  
+  const { transactionId, _id } = req.params;
 
   try {
     const transaction = await Transaction.findById(transactionId);
 
     if (!transaction) {
-      throw new apiError(404, "Transaction not found");
+      return res.status(404).send("Transaction not found");
     }
 
     // Delete the transaction
     await transaction.deleteOne();
 
-    return res.status(200).json(new apiResponse(200, "Transaction Deleted Successfully"));
+    return res
+      .status(200)
+      .json(new apiResponse(200, "Transaction Deleted Successfully"));
   } catch (error) {
     console.log("Transaction Deletion Failed", error);
-    throw new apiError(500, "Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 });
-
 
 export {
   createTransaction,
   readTransaction,
   updateTransaction,
-  deleteTransaction
-}
+  deleteTransaction,
+};
